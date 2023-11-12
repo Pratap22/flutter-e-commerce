@@ -1,9 +1,11 @@
+import 'package:e_commerce/constants/constants.dart';
 import 'package:e_commerce/constants/routes.dart';
 import 'package:e_commerce/models/product/product_model.dart';
+import 'package:e_commerce/provider/app_provider.dart';
 import 'package:e_commerce/screens/cart/cart_view.dart';
 import 'package:e_commerce/widgets/quantity_counter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetail extends StatefulWidget {
   final ProductModel product;
@@ -14,7 +16,7 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
-  int quantity = 0;
+  int quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class _ProductDetailState extends State<ProductDetail> {
             icon: const Icon(Icons.shopping_cart_outlined))
       ]),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.only(left: 12, right: 12),
         child: SingleChildScrollView(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -74,7 +76,13 @@ class _ProductDetailState extends State<ProductDetail> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ProductModel productModel =
+                        widget.product.copyWith(quantity: quantity);
+                    Provider.of<AppProvider>(context, listen: false)
+                        .addCartProduct(productModel);
+                    showMessage("Added to Cart");
+                  },
                   child: const Text("ADD TO CART"),
                 ),
                 const SizedBox(

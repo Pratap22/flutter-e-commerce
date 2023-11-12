@@ -1,19 +1,31 @@
 import 'package:e_commerce/constants/asset_images.dart';
+import 'package:e_commerce/constants/constants.dart';
+import 'package:e_commerce/models/product/product_model.dart';
+import 'package:e_commerce/provider/app_provider.dart';
 import 'package:e_commerce/widgets/quantity_counter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CartItem extends StatefulWidget {
-  const CartItem({
-    super.key,
-  });
+  final ProductModel product;
+  const CartItem({super.key, required this.product});
 
   @override
   State<CartItem> createState() => _CartItemState();
 }
 
 class _CartItemState extends State<CartItem> {
-  int quantity = 0;
+  int quantity = 1;
+
+   @override
+  void initState() {
+    setState(() {
+      quantity = widget.product.quantity ?? quantity;
+    });
+    super.initState();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,8 +34,8 @@ class _CartItemState extends State<CartItem> {
         child: Row(
           children: [
             Expanded(
-                child: Image.asset(
-              AssetsImages.instance.welcomeImage,
+                child: Image.network(
+              widget.product.image,
               height: 140,
             )),
             Expanded(
@@ -44,7 +56,7 @@ class _CartItemState extends State<CartItem> {
                             children: [
                               FittedBox(
                                 child: Text(
-                                  "Banana",
+                                  widget.product.name,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -76,7 +88,7 @@ class _CartItemState extends State<CartItem> {
                             ],
                           ),
                           Text(
-                            "\$10",
+                            "\$${widget.product.price.toString()}",
                             style: const TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,
@@ -86,7 +98,11 @@ class _CartItemState extends State<CartItem> {
                       ),
                       CupertinoButton(
                           padding: EdgeInsets.zero,
-                          onPressed: () {},
+                          onPressed: () {
+                            Provider.of<AppProvider>(context, listen: false)
+                                .removeCartProduct(widget.product);
+                                showMessage("Removed from Cart");
+                          },
                           child: const CircleAvatar(
                             maxRadius: 13,
                             child: Icon(

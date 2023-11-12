@@ -12,7 +12,7 @@ class ProductModel {
       required this.name,
       required this.price,
       required this.description,
-      this.qty});
+      this.quantity});
 
   String image;
   String id;
@@ -20,14 +20,14 @@ class ProductModel {
   double price;
   String description;
 
-  int? qty;
+  int? quantity;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["id"],
         name: json["name"],
         description: json["description"],
         image: json["image"],
-        qty: json["qty"],
+        quantity: json["quantity"],
         price: double.parse(json["price"].toString()),
       );
 
@@ -37,17 +37,17 @@ class ProductModel {
         "image": image,
         "description": description,
         "price": price,
-        "qty": qty
+        "quantity": quantity
       };
   ProductModel copyWith({
-    int? qty,
+    int? quantity,
   }) =>
       ProductModel(
         id: id,
         name: name,
         description: description,
         image: image,
-        qty: qty ?? this.qty,
+        quantity: quantity ?? this.quantity,
         price: price,
       );
 }
